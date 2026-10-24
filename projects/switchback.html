@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Switchback Experiments on 19.7M NYC Trips · Shrestha Bhattacharya</title>
+	<meta name="description" content="When riders compete for the same drivers, a standard A/B test of a promotion measures the wrong thing. A simulation built from 19.7 million real NYC ride-hail trips." />
+	<link rel="icon" href="../assets/img/shrestha.jpg" />
+	<link rel="stylesheet" href="../assets/css/site.css" />
+	<script>document.documentElement.classList.add("js");</script>
+	<script src="../assets/js/chart-data.js" defer></script>
+	<script src="../assets/js/charts.js" defer></script>
+	<script src="../assets/js/main.js" defer></script>
+</head>
+<body class="post-page">
+	<a class="skip-link" href="#main">Skip to content</a>
+
+	<header class="site-header">
+		<div class="page-shell nav-layout">
+			<a class="nav-home" href="../index.html"><img src="../assets/img/shrestha.jpg" width="32" height="32" alt="" />Shrestha Bhattacharya</a>
+			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+			<nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+				<a href="../index.html#projects">Projects</a>
+				<a href="../index.html#case-studies">Case Studies</a>
+				<a href="../index.html#experience">Experience</a>
+				<a href="../index.html#education">Education</a>
+			</nav>
+		</div>
+	</header>
+
+	<main id="main">
+		<article class="post">
+			<div class="post-col">
+				<a class="post-back" href="../index.html#projects">← Projects</a>
+				<p class="post-kicker">Project · Marketplace experimentation</p>
+				<h1>Testing a Ride-Hail Promotion When Riders Compete for Drivers: Switchback Experiments on 19.7M NYC Trips</h1>
+				<p class="post-lede">
+					When riders compete for the same drivers, a standard A/B test of a promotion measures the wrong thing. A simulation
+					built from 19.7 million real NYC ride-hail trips shows how large the error is, and what a time-window (switchback)
+					design recovers and costs.
+				</p>
+
+				<div class="stat-grid">
+					<div class="stat-tile"><div class="stat-num">3.3×</div><div class="stat-label">overstatement by a user-level A/B test: it reports +15.0% in completed rides, while the true rollout effect is +4.6%</div></div>
+					<div class="stat-tile"><div class="stat-num">11×</div><div class="stat-label">lower error from a well-designed switchback (about 1pp vs. 10.4pp): 60–120 minute windows, a 30-minute washout, adjusted for expected demand</div></div>
+					<div class="stat-tile"><div class="stat-num">~5%</div><div class="stat-label">false positives kept by a randomization test at every window length, where the usual tests reach 15%</div></div>
+					<div class="stat-tile"><div class="stat-num">2.4%</div><div class="stat-label">smallest lift in completed rides detected in 14 days (1.8% in 28 days): small effects need long experiments</div></div>
+				</div>
+
+				<div class="prose">
+					<p>
+						The usual A/B test assumes one user's treatment does not change another user's outcome. In a marketplace it does:
+						riders requesting rides compete for the same drivers, so a promotion for some riders changes what happens to the others.
+						I wanted to see how bad the bias is, how it depends on the market, and what the fix costs. There is no real marketplace
+						I can experiment on, so this is a simulation study of the mechanism: a ride-hail market whose demand rhythm, trip
+						durations and demand noise come from 19.7 million real trips
+						(<a href="https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page" target="_blank" rel="noopener">NYC TLC data</a>),
+						and whose matching logic is validated against an exact formula. It does not measure any company's system.
+					</p>
+				</div>
+
+				<section class="part" id="part-1">
+					<p class="part-label">Part 1 · The mechanism</p>
+					<h2>What the promotion does, and what a user-level test sees</h2>
+					<p>
+						A rider promotion makes treated riders request 15% more often. The truth is simulated directly: run the whole market
+						with everyone treated, run it again with no one treated (same demand shocks), and compare completed rides over 14 days,
+						averaged over 400 repetitions. Then run a standard user-level test with half the riders treated.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="switchHist"></div>
+						<figcaption>Fig. 11 — the user-level test reports the demand lift, not what a rollout delivers. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th></th><th>Result</th></tr></thead>
+							<tbody>
+								<tr><td>Effect of the promotion on requests</td><td><strong>+15.0%</strong></td></tr>
+								<tr><td>Requests served, everyone untreated vs. everyone treated</td><td>91.4% vs. 83.1%</td></tr>
+								<tr><td>True effect on completed rides</td><td><strong>+4.60%</strong> (about 267 more rides on a base of 5,813 per day)</td></tr>
+								<tr><td>User-level A/B test</td><td><strong>+14.98%</strong>, 3.3× the truth</td></tr>
+								<tr><td>Tests whose 95% interval contains the truth</td><td><strong>0%</strong></td></tr>
+								<tr><td>Tests declaring a significant positive effect</td><td><strong>100%</strong></td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p>
+						The reason: an unserved request is lost at random, so treated and control riders have the same chance of getting a
+						ride. The competition for drivers hits both groups equally and cancels in the comparison. The test measures the direct
+						effect on requests (+15%) and is blind to the shared supply limit that decides what happens at rollout.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="supply"></div>
+						<figcaption>Fig. 12 — the gap depends on how tight supply is: 13.4pp at 77% of requests served, 10.4pp at 91%, 3.8pp at 99%, none with abundant drivers. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p class="aside">
+						Two of my written predictions were wrong, and I kept the corrections. I expected the gap to grow with the share of
+						riders treated; it does not (the user-level estimate is 15.3%, 14.9% and 14.8% at 10%, 50% and 90% treated). I also
+						expected it to peak at rush hour; it does not, because supply in the model scales with demand all day.
+					</p>
+				</section>
+
+				<section class="part" id="part-2">
+					<p class="part-label">Part 2 · The simulator</p>
+					<h2>Built from real trips, checked against an exact formula</h2>
+					<p>
+						From the real data I took three things: the demand rhythm (requests per minute swing about 11-fold across a typical
+						week), how long a driver is occupied (22.7 minutes on average, from dispatch to dropoff), and the demand noise
+						(15-minute demand varies about 10% around the weekly rhythm, and persistently: autocorrelation 0.95 at 15 minutes and
+						0.75 at three hours). The file records only completed trips, so demand is a lower bound; I used the data for rhythm
+						and noise, never for effect sizes.
+					</p>
+					<p>
+						The market is one zone at 1% of citywide demand. Riders request at the weekly rate times a persistent demand shock.
+						A request is matched to an idle driver if there is one, otherwise the rider is lost. A matched driver is busy for a
+						realistic random time and then returns. The driver pool follows a schedule equal to expected demand and does not
+						react to treatment.
+					</p>
+					<p>
+						Validation: Erlang's loss formula gives the exact share of lost riders in a market like this, whatever the
+						distribution of trip times. At 15-second time steps, the simulator is within 0.10 to 0.27 percentage points of the
+						formula across five market sizes (a 2 to 4% relative error), and exponential and three-phase trip times give the same
+						answer, as the formula says they should. The check caught two bugs of mine: returning drivers became matchable one
+						step late (about 4% extra load), and a crude half-minute correction I tried only moved the error to the other side.
+						The principled fix was finer time steps.
+					</p>
+				</section>
+
+				<section class="part" id="part-3">
+					<p class="part-label">Part 3 · The switchback</p>
+					<h2>What it recovers, and what it costs</h2>
+					<p>
+						A switchback flips the whole market between treatment and control in time windows, so treated and control riders
+						never compete at the same moment. I ran 28 combinations of window length (15 minutes to a day), assignment (each
+						window flipped independently, or paired windows with one treated and one control), washout (dropping the first
+						minutes of each window from the analysis), and analysis (a plain comparison, or a regression that adjusts for each
+						window's expected demand), with 250 simulated experiments each.
+					</p>
+					<p>Carryover is the first cost: drivers busy at the start of a window were dispatched under the previous window's treatment.</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="carryover"></div>
+						<figcaption>Fig. 13 — short windows overstate the effect; a 30-minute washout removes the bias. The user-level test is off by +10.4pp. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p>
+						The second cost is noise. A plain comparison of treated and control windows is extremely noisy (SD 2.8 to 12.9
+						percentage points), because the treated windows land on different parts of the daily cycle than the control windows.
+						Pairing adjacent windows helps only when the paired windows are similar (1.1 points at 15 to 30 minutes, but 13.4 at
+						eight hours). Adjusting for each window's expected demand, which is known in advance from the demand profile, brings
+						it to 0.8 to 1.6 points at every window length.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="noise"></div>
+						<figcaption>Fig. 14 — adjusting for expected demand cuts the noise 3 to 11 times. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p>
+						The best combinations (windows of 60 to 120 minutes, a 15 to 30 minute washout, adjusted) have an error (RMSE) of 0.9
+						to 1.0 percentage points, about 11 times lower than the user-level test. The recommended design, paired 120-minute
+						windows with a 30-minute washout, has bias -0.02 and RMSE 1.00.
+					</p>
+				</section>
+
+				<section class="part" id="part-4">
+					<p class="part-label">Part 4 · Honest inference</p>
+					<h2>Which tests to trust, and how small a lift you can see</h2>
+					<p>
+						The usual standard errors are 8% to 21% too small, so 95% intervals cover the truth only 87% to 93% of the time. With
+						no real effect, the usual tests produce false positives 6% to 15% of the time under complete randomization, and 15%
+						when there are only 14 daily windows. A randomization test avoids this: it compares the observed estimate with what
+						the estimator gives under re-drawn random assignments of the experiment's own design, so it needs no variance formula
+						and stays valid however demand noise is correlated
+						(<a href="https://arxiv.org/abs/2009.00148" target="_blank" rel="noopener">Bojinov, Simchi-Levi &amp; Zhao</a> also
+						propose exact randomization p-values for switchbacks).
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="falsePos"></div>
+						<figcaption>Fig. 15 — with no real effect, the randomization test rejects 4.0% to 6.4% of the time in nine of ten cells. The tenth (8.8%) was noise: a rerun with 1,000 experiments gave 4.4%. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p>
+						The price is power with few windows: at the true +4.6% effect, the test detects it 95% to 100% of the time for windows
+						up to eight hours, but only 78% to 81% for daily windows.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="powerCurve"></div>
+						<figcaption>Fig. 16 — the smallest lift detected with 80% power is about 2.4% in 14 days and 1.8% in 28 days. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p class="aside">
+						Stress tests: the switchback's bias stays between -0.02 and +0.13pp at every supply level, while the user-level bias
+						runs from +13.4 to +0.6pp. With trips twice as long, carryover needs about twice the window length, and a 30-minute
+						washout keeps the bias within 0.25pp. With demand noise made as persistent as the data, the randomization test stays
+						at 5.0% to 7.3% false positives. In practice: windows of about five trip-lengths, a washout of about one trip-length,
+						adjust for expected demand, test by randomization, and size the experiment before running it.
+					</p>
+				</section>
+
+				<section class="part" id="scope">
+					<p class="part-label">Scope &amp; Assumptions</p>
+					<ul class="limitations">
+						<li><strong>A simulation of a mechanism.</strong> One zone, no waiting queue, a supply schedule that ignores the promotion, a promotion that changes only request rates, and riders served at random when supply is short. Real marketplaces have spatial matching, dynamic pricing and supply response, so effect sizes here say nothing about any company.</li>
+						<li><strong>The "user-level equals the demand lift" result follows from the matching rule</strong> (unserved requests are random), a stylized mechanism.</li>
+						<li><strong>Carryover only through busy drivers.</strong> No behavioral carryover (riders changing habits), and effects are the same within a window. The expected-demand covariate is assumed known exactly; in practice it is estimated from history.</li>
+						<li><strong>Simulation error.</strong> 250 experiments per cell gives about ±1.4 points of noise on coverage and false-positive rates. The demand-noise model is slightly less persistent at long lags than the data (0.66 vs. 0.75 at three hours), so real standard errors could be worse.</li>
+						<li><strong>Data.</strong> Only completed trips are observed, so demand is a lower bound. January 2024 weather events are left in as real noise.</li>
+					</ul>
+					<p class="aside" style="margin-top: 14px">Reproduced end-to-end by one script that writes every figure above and a results file with every number quoted here, plus step-by-step notebooks for each stage.</p>
+				</section>
+
+				<nav class="post-nav" aria-label="More projects">
+					<a href="ab-testing.html"><small>Previous project</small><span>A/B Tests With 32% Fewer Users</span></a>
+					<a class="is-next" href="../index.html#case-studies"><small>Next</small><span>DS Case Studies</span></a>
+				</nav>
+			</div>
+		</article>
+	</main>
+
+	<footer class="site-footer">
+		<div class="page-shell footer-layout">
+			<div>
+				<a class="footer-email" href="mailto:iamsb98@gmail.com">iamsb98 [at] gmail.com</a>
+			</div>
+			<div class="footer-links">
+				<a href="https://www.linkedin.com/in/sbhattacharya98/" target="_blank" rel="noopener">LinkedIn</a>
+				<a href="../SB_DE_mt.pdf" target="_blank" rel="noopener">Résumé</a>
+			</div>
+		</div>
+		<div class="page-shell footer-meta">
+			<span>&copy; Shrestha Bhattacharya 2026</span>
+		</div>
+	</footer>
+</body>
+</html>

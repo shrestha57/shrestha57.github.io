@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Advertising Incrementality &amp; Uplift Modeling · Shrestha Bhattacharya</title>
+	<meta name="description" content="A complete causal-inference project: a network-interference simulation, a randomization audit, and uplift modeling on 14 million real users." />
+	<link rel="icon" href="../assets/img/shrestha.jpg" />
+	<link rel="stylesheet" href="../assets/css/site.css" />
+	<script>document.documentElement.classList.add("js");</script>
+	<script src="../assets/js/chart-data.js" defer></script>
+	<script src="../assets/js/charts.js" defer></script>
+	<script src="../assets/js/main.js" defer></script>
+</head>
+<body class="post-page">
+	<a class="skip-link" href="#main">Skip to content</a>
+
+	<header class="site-header">
+		<div class="page-shell nav-layout">
+			<a class="nav-home" href="../index.html"><img src="../assets/img/shrestha.jpg" width="32" height="32" alt="" />Shrestha Bhattacharya</a>
+			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+			<nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+				<a href="../index.html#projects">Projects</a>
+				<a href="../index.html#case-studies">Case Studies</a>
+				<a href="../index.html#experience">Experience</a>
+				<a href="../index.html#education">Education</a>
+			</nav>
+		</div>
+	</header>
+
+	<main id="main">
+		<article class="post">
+			<div class="post-col">
+				<a class="post-back" href="../index.html#projects">← Projects</a>
+				<p class="post-kicker">Project · Causal inference</p>
+				<h1>Advertising Incrementality &amp; Uplift Modeling</h1>
+				<p class="post-lede">
+					Does an ad campaign cause incremental conversions — and whose? A complete causal-inference project:
+					a network-interference simulation, a randomization audit, and uplift modeling on 14 million real users,
+					with uncertainty on every number.
+				</p>
+
+				<div class="stat-grid">
+					<div class="stat-tile"><div class="stat-num">+59%</div><div class="stat-label">relative lift in conversion, 0.194% → 0.309% (95% CI +56% to +63%)</div></div>
+					<div class="stat-tile"><div class="stat-num">37%</div><div class="stat-label">of conversions in the treated group were incremental — the rest would've happened anyway</div></div>
+					<div class="stat-tile"><div class="stat-num">+3.20pp</div><div class="stat-label">causal lift for users actually exposed to the ad; the naive estimate overstates this by ~60%</div></div>
+					<div class="stat-tile"><div class="stat-num">82%</div><div class="stat-label">of incremental conversions captured by targeting just the top 20% by predicted uplift</div></div>
+				</div>
+
+				<div class="prose">
+					<p>
+						Most A/B-testing tutorials stop at "is the difference significant?" Two harder questions matter in practice:
+						can you trust the experiment's <em>design</em>, and who did the treatment actually work for — not just on average.
+						Motivated by Meta Research's Jobs-on-Facebook experiment (Karrer, Shi &amp; Bhole, 2021), where a naive
+						user-randomized test measured 71.8% lift and a cluster-randomized version of the same test measured 49.7%
+						<a href="https://research.facebook.com/blog/2021/8/testing-product-changes-with-network-effects/" target="_blank" rel="noopener">(read the paper →)</a>,
+						this project does two things of its own: a simulation of that mechanism, and a full causal analysis of a real,
+						public 14-million-user ad dataset.
+					</p>
+				</div>
+
+				<section class="part" id="part-1">
+					<p class="part-label">Part 1 · Simulation</p>
+					<h2>How network interference biases a test</h2>
+					<p>
+						Built a synthetic network of 20,000 users in 400 tightly-knit clusters, where each user's outcome depends on a
+						direct effect (were <em>you</em> treated?) and a spillover effect (were your neighbors treated?) — set to 1.0 and
+						0.6, for a true combined effect of 1.6. Randomized individuals and randomized whole clusters, 300 times each.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="interference"></div>
+						<figcaption>Fig. 1 — individual randomization recovers only the direct effect; cluster randomization recovers close to the true combined effect. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Design</th><th>Estimated lift</th><th>What it measures</th></tr></thead>
+							<tbody>
+								<tr><td>Randomize individuals</td><td><strong>1.001 ± 0.045</strong></td><td>Direct effect only</td></tr>
+								<tr><td>Randomize whole clusters</td><td><strong>1.570 ± 0.043</strong></td><td>Direct + spillover (true total: 1.6)</td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p class="aside">
+						Checked two ways this isn't a one-parameter trick: with <em>competitive</em> spillover (e.g. job seekers competing
+						for the same openings) the bias flips sign and individual randomization <em>overstates</em> the effect — the direction
+						of Meta's actual result; and cluster estimates degrade as cross-cluster ties increase (1.605 → 1.463 as ties per user
+						grow from 0.05 to 3.0). This is a toy model with assumed parameters — it demonstrates the mechanism, not any real
+						product's effect.
+					</p>
+				</section>
+
+				<section class="part" id="part-2">
+					<p class="part-label">Part 2 · Real data</p>
+					<h2>Is the experiment trustworthy?</h2>
+					<p>
+						The <a href="https://ailab.criteo.com/criteo-uplift-prediction-dataset/" target="_blank" rel="noopener">Criteo Uplift Prediction Dataset</a>
+						(Diemert et al., 2018, AdKDD; CC-BY-NC-SA 4.0): 13,979,592 real users randomized into an ad campaign (85%) or
+						control (15%), with 12 anonymized features. Before measuring any effect, I audited the randomization itself: no
+						missing values or impossible rows, a sample-ratio check matching the stated 85/15 design (chi-square p = 0.999),
+						and covariate balance across all 12 features (max standardized difference 0.049, under the usual 0.1 threshold).
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="balance"></div>
+						<figcaption>Fig. 2 — every feature balanced between treatment and control; the test was well-randomized. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+				</section>
+
+				<section class="part" id="part-3">
+					<p class="part-label">Part 3 · Did the ad work?</p>
+					<h2>The headline, and the exposure trap</h2>
+					<p>
+						Design stated before looking at results: conversion primary, visit secondary, Bonferroni-adjusted α = 0.025.
+						Comparing everyone <em>assigned</em> to the campaign against everyone assigned to control:
+					</p>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Outcome</th><th>Control</th><th>Treatment</th><th>Lift</th><th>95% CI</th></tr></thead>
+							<tbody>
+								<tr><td>Conversion</td><td>0.194%</td><td>0.309%</td><td><strong>+0.115pp</strong></td><td>0.108 to 0.122</td></tr>
+								<tr><td>Visit</td><td>3.82%</td><td>4.85%</td><td>+1.03pp</td><td>1.01 to 1.06</td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p>
+						With 14M users, significance was never in doubt (z = 28.5) — the useful number is effect size: about 1.15 extra
+						conversions per 1,000 users assigned, of which roughly 37% were incremental.
+					</p>
+					<p>
+						Only 3.6% of assigned users were actually shown an ad, and exposure is self-selected (exposed treated users convert
+						at 5.4%, unexposed at 0.12% — mostly selection, not effect). Using random <em>assignment</em> as an instrument for
+						exposure gives the causal effect on users exposed because they were assigned:
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="effects"></div>
+						<figcaption>Fig. 3 — the naive exposed-vs-control comparison overstates the causal effect by about 60%. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p class="aside">
+						For exposed users, conversion rose <strong>3.20pp (95% bootstrap CI 3.01 to 3.39)</strong> — versus a naive 5.18pp.
+						This rests on one untestable assumption: that assignment affects outcomes only through exposure.
+					</p>
+				</section>
+
+				<section class="part" id="part-4">
+					<p class="part-label">Part 4 · For whom did it work?</p>
+					<h2>Uplift modeling finds the 20% who matter</h2>
+					<p>
+						An average lift of 0.115pp could mean everyone benefits a little, or a few people benefit a lot. I fit three causal
+						meta-learners (S-, T- and X-learner, on gradient boosting) on 70% of the data; every number below comes from the
+						held-out 30% (4.19M users), with 95% CIs from 200 bootstrap resamples.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="capture"></div>
+						<figcaption>Fig. 4 — ranking users by the X-learner's predicted uplift captures incremental conversions far faster than random targeting. Hover the chart to read each curve. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Users targeted</th><th>X-learner captures</th><th>Random targeting</th></tr></thead>
+							<tbody>
+								<tr><td>Top 10%</td><td><strong>71%</strong> (66–75)</td><td>11%</td></tr>
+								<tr><td>Top 20%</td><td><strong>82%</strong> (78.5–84.8)</td><td>21%</td></tr>
+								<tr><td>Top 30%</td><td><strong>88%</strong> (86–91)</td><td>31%</td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p>
+						Checked directly rather than trusting the model's own word: grouping test users into ten bins by predicted uplift
+						and comparing treated vs. control <em>within</em> each bin.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="deciles"></div>
+						<figcaption>Fig. 5 — the measured lift is concentrated almost entirely in the model's top decile (+0.80pp vs. an overall average of +0.115pp). <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p class="aside">
+						The top decile also has a much higher baseline conversion rate (1.8% vs. ~0.1% elsewhere), so part of its large
+						absolute lift is just that these users convert more in general — absolute and relative lift tell different stories
+						here. In practice: most of the campaign's incremental conversions come from a small slice of the audience, so a
+						budget-limited advertiser could target the model's top 20–30% and keep most of the benefit.
+					</p>
+				</section>
+
+				<section class="part" id="scope">
+					<p class="part-label">Scope &amp; Assumptions</p>
+					<ul class="limitations">
+						<li><strong>Two estimands, two assumptions.</strong> The +0.115pp result holds under random assignment alone, verified above. The +3.20pp exposed-user result additionally assumes assignment affects outcomes only through exposure — standard for this kind of estimate, and not something that can be verified from the data directly.</li>
+						<li><strong>One split, default hyperparameters.</strong> The headline comparison is between meta-learner architectures (X vs. T vs. S), a contrast that's robust to light tuning; CIs here reflect test-set sampling, not retraining variance. A multi-seed or k-fold check would sharpen the point estimates further.</li>
+						<li><strong>Anonymized features</strong>, standard for public ad-exposure data — enough to show the high-uplift segment exists and is targetable, not enough to say who's actually in it.</li>
+						<li><strong>Likely a subsample</strong> of Criteo's full release (14M rows vs. ~25M often cited elsewhere), with 11.8% of rows sharing identical feature vectors — kept, since there's no user ID to confirm they're duplicates rather than distinct users with similar profiles.</li>
+						<li><strong>Two sources, kept separate.</strong> The interference simulation uses parameters I chose; Meta's published result motivates the question but isn't reproduced. Every quantitative result here runs on Criteo's public data only.</li>
+					</ul>
+				</section>
+
+				<nav class="post-nav" aria-label="More projects">
+					<a href="../index.html#projects"><small>Back</small><span>All projects</span></a>
+					<a class="is-next" href="ab-testing.html"><small>Next project</small><span>A/B Tests With 32% Fewer Users</span></a>
+				</nav>
+			</div>
+		</article>
+	</main>
+
+	<footer class="site-footer">
+		<div class="page-shell footer-layout">
+			<div>
+				<a class="footer-email" href="mailto:iamsb98@gmail.com">iamsb98 [at] gmail.com</a>
+			</div>
+			<div class="footer-links">
+				<a href="https://www.linkedin.com/in/sbhattacharya98/" target="_blank" rel="noopener">LinkedIn</a>
+				<a href="../SB_DE_mt.pdf" target="_blank" rel="noopener">Résumé</a>
+			</div>
+		</div>
+		<div class="page-shell footer-meta">
+			<span>&copy; Shrestha Bhattacharya 2026</span>
+		</div>
+	</footer>
+</body>
+</html>

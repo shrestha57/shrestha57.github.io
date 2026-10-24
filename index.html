@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Shrestha Bhattacharya</title>
+	<meta name="description" content="Shrestha Bhattacharya: data engineering professional moving into data science. MS Analytics at Georgia Tech; causal inference and experimentation projects." />
+	<link rel="icon" href="assets/img/shrestha.jpg" />
+	<link rel="stylesheet" href="assets/css/site.css" />
+	<script>document.documentElement.classList.add("js");</script>
+	<script src="assets/js/chart-data.js" defer></script>
+	<script src="assets/js/charts.js" defer></script>
+	<script src="assets/js/main.js" defer></script>
+</head>
+<body>
+	<a class="skip-link" href="#main">Skip to content</a>
+
+	<header class="site-header">
+		<div class="page-shell nav-layout">
+			<a class="nav-portrait" href="./" aria-label="Shrestha Bhattacharya, home"><img src="assets/img/shrestha.jpg" width="32" height="32" alt="" /></a>
+			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+			<nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+				<a href="#projects">Projects</a>
+				<a href="#research">Research</a>
+				<a href="#case-studies">Case Studies</a>
+				<a href="#experience">Experience</a>
+				<a href="#education">Education</a>
+			</nav>
+		</div>
+	</header>
+
+	<main id="main">
+		<section class="hero" id="top" aria-labelledby="hero-title">
+			<div class="page-shell hero-layout">
+				<div class="hero-copy">
+					<h1 id="hero-title">Shrestha Bhattacharya</h1>
+					<p class="hero-context">
+						3+ years as a data engineering professional, now trying to break into data science —
+						MS Analytics at Georgia Tech, previously building data pipelines at Cognizant.
+					</p>
+					<div class="hero-links">
+						<a href="https://www.linkedin.com/in/sbhattacharya98/" target="_blank" rel="noopener">LinkedIn</a>
+						<a href="mailto:iamsb98@gmail.com">Email</a>
+						<a href="SB_DE_mt.pdf" target="_blank" rel="noopener">Résumé</a>
+					</div>
+				</div>
+				<img class="hero-portrait" src="assets/img/shrestha.jpg" width="400" height="400" alt="Portrait of Shrestha Bhattacharya" />
+			</div>
+		</section>
+
+		<section class="section" id="projects" aria-labelledby="projects-title">
+			<div class="page-shell">
+				<header class="section-heading">
+					<h2 id="projects-title">Projects</h2>
+					<p>Selected Projects</p>
+				</header>
+
+				<div class="work-feature">
+					<div class="work-story">
+						<p class="entry-date">Causal inference · Criteo Uplift Prediction Dataset · 14M users</p>
+						<h3><a href="projects/ad-incrementality.html">Advertising Incrementality &amp; Uplift Modeling</a></h3>
+						<p>
+							Does an ad campaign cause incremental conversions — and whose? A complete causal-inference project:
+							a network-interference simulation, a randomization audit, and uplift modeling on 14 million real users,
+							with uncertainty on every number.
+						</p>
+					</div>
+					<div class="product-list" aria-label="Advertising Incrementality &amp; Uplift Modeling, by part">
+						<a href="projects/ad-incrementality.html#part-1">
+							<div class="product-image"><div class="chart" data-chart="interference" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 1 · Simulation</strong><small>How network interference biases a test</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/ad-incrementality.html#part-2">
+							<div class="product-image"><div class="chart" data-chart="balance" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 2 · Real data</strong><small>Is the experiment trustworthy?</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/ad-incrementality.html#part-3">
+							<div class="product-image"><div class="chart" data-chart="effects" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 3 · Did the ad work?</strong><small>The headline, and the exposure trap</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/ad-incrementality.html#part-4">
+							<div class="product-image"><div class="chart" data-chart="capture" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 4 · For whom did it work?</strong><small>Uplift modeling finds the 20% who matter</small></span><span aria-hidden="true">→</span></span>
+						</a>
+					</div>
+				</div>
+
+				<div class="work-feature">
+					<div class="work-story">
+						<p class="entry-date">Experimentation · RetailHero (X5) SMS campaign · 200,000 customers</p>
+						<h3><a href="projects/ab-testing.html">A/B Tests With 32% Fewer Users: Variance Reduction &amp; Safe Early Stopping</a></h3>
+						<p>
+							How many users does a test really need, and what happens when you check it early? Variance reduction
+							and sequential testing on a real 200,000-customer experiment, verified against simulations where the
+							true effect is known.
+						</p>
+					</div>
+					<div class="product-list" aria-label="A/B Tests With 32% Fewer Users, by part">
+						<a href="projects/ab-testing.html#part-2">
+							<div class="product-image"><div class="chart" data-chart="variance" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 2 · Variance reduction</strong><small>What past behavior is worth</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/ab-testing.html#part-3">
+							<div class="product-image"><div class="chart" data-chart="peeking" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 3 · Peeking</strong><small>What checking early does to a test</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/ab-testing.html#part-4">
+							<div class="product-image"><div class="chart" data-chart="decision" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 4 · Both together</strong><small>Fewer users and more power</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/ab-testing.html#winners-curse">
+							<div class="product-image"><div class="chart" data-chart="winners" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 4 · A caution</strong><small>Stopping early overstates the winning effect</small></span><span aria-hidden="true">→</span></span>
+						</a>
+					</div>
+				</div>
+
+				<div class="work-feature">
+					<div class="work-story">
+						<p class="entry-date">Marketplace experimentation · Simulation built from 19.7M NYC ride-hail trips</p>
+						<h3><a href="projects/switchback.html">Testing a Ride-Hail Promotion When Riders Compete for Drivers: Switchback Experiments on 19.7M NYC Trips</a></h3>
+						<p>
+							When riders compete for the same drivers, a standard A/B test of a promotion measures the wrong thing. A simulation
+							built from 19.7 million real NYC ride-hail trips shows how large the error is, and what a time-window (switchback)
+							design recovers and costs.
+						</p>
+					</div>
+					<div class="product-list" aria-label="Switchback experiments, by part">
+						<a href="projects/switchback.html#part-1">
+							<div class="product-image"><div class="chart" data-chart="switchHist" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 1 · The mechanism</strong><small>What a user-level test sees</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/switchback.html#part-1">
+							<div class="product-image"><div class="chart" data-chart="supply" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 1 · Driver supply</strong><small>The tighter supply gets, the more it overstates</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/switchback.html#part-3">
+							<div class="product-image"><div class="chart" data-chart="carryover" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 3 · The switchback</strong><small>What it recovers, and what it costs</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/switchback.html#part-4">
+							<div class="product-image"><div class="chart" data-chart="falsePos" data-compact></div></div>
+							<span class="product-caption"><span><strong>Part 4 · Honest inference</strong><small>Which tests to trust</small></span><span aria-hidden="true">→</span></span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="research" aria-labelledby="research-title">
+			<div class="page-shell">
+				<header class="section-heading">
+					<h2 id="research-title">Research</h2>
+				</header>
+
+				<div class="research-grid">
+					<article class="research-card">
+						<a class="research-image" href="MonNS.pdf" target="_blank" rel="noopener" aria-label="Read Variance-Reduced Streaming PCA with Parameter-Free Momentum">
+							<div class="chart" data-chart="streamingPca" data-compact></div>
+						</a>
+						<div class="research-copy">
+							<p class="research-venue">arXiv · 2026</p>
+							<h3><a href="MonNS.pdf" target="_blank" rel="noopener">Variance-Reduced Streaming PCA with Parameter-Free Momentum</a></h3>
+							<p class="research-authors"><strong>Shrestha Bhattacharya</strong></p>
+							<p class="research-summary">
+								TL;DR: Oja's algorithm for streaming PCA is noisy because every step uses a rank-one gradient. VR-OJA keeps a
+								bias-corrected moving average of those gradients, with a parameter-free momentum default β⋆ = 1 − k/p. It cuts
+								final subspace error by 22–27% over OJA-QR on synthetic streams, and on the S&amp;P 500 benchmark gives 24–47%
+								error reduction at 10× the base learning rate.
+							</p>
+							<div class="project-links" aria-label="Links for Variance-Reduced Streaming PCA with Parameter-Free Momentum">
+								<a href="MonNS.pdf" target="_blank" rel="noopener">Paper</a>
+							</div>
+						</div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="case-studies" aria-labelledby="case-studies-title">
+			<div class="page-shell">
+				<header class="section-heading">
+					<h2 id="case-studies-title">DS Case Studies</h2>
+					<p>Interactive explainers</p>
+				</header>
+
+				<div class="case-list">
+				<article class="nugget-card" id="case-shortcut">
+					<div>
+						<p class="research-venue">DS Case Study · Simplified model</p>
+						<h3>The shortcut that saves you 17 minutes stops saving anyone time once everyone takes it.</h3>
+						<p class="research-summary">A navigation app suggesting a faster route, shown with a simplified model. Drag the slider.</p>
+						<p class="research-summary">
+							Navigation apps suggest the faster route to each driver. If only a few drivers follow, the shortcut really is fast.
+							But every driver who takes it slows it down, and clears the main road behind them. A test on a small share of drivers
+							measures the left edge of this chart, not what happens when everyone follows the advice. It is the same interference
+							problem I simulate in the <a href="projects/switchback.html">marketplace project above</a>: one user's treatment
+							changes the conditions for the others.
+						</p>
+					</div>
+
+					<div class="demo" data-shortcut>
+						<div class="demo-chips" role="group" aria-label="Jump to a share of drivers">
+							<button type="button" data-pct="5" aria-pressed="true">Small pilot (5%)</button>
+							<button type="button" data-pct="40" aria-pressed="false">Where it settles (40%)</button>
+							<button type="button" data-pct="100" aria-pressed="false">Everyone follows (100%)</button>
+						</div>
+						<div class="demo-range">
+							<label for="shortcut-range">Share of drivers following the suggested shortcut: <strong data-out="pct">5%</strong></label>
+							<input type="range" id="shortcut-range" min="0" max="100" step="1" value="5" aria-describedby="shortcut-caption" />
+						</div>
+						<div class="demo-bars">
+							<div class="demo-row"><div class="demo-label"><span>Main road</span><strong data-out="main">34.5 min</strong></div><div class="demo-track"><div class="demo-fill is-b" data-bar="main"></div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Suggested shortcut</span><strong data-out="short">17.0 min</strong></div><div class="demo-track"><div class="demo-fill is-a" data-bar="short"></div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Average driver</span><strong data-out="avg">33.6 min</strong></div><div class="demo-track"><div class="demo-fill is-n" data-bar="avg"></div></div></div>
+						</div>
+						<p class="demo-note">Before the app suggested the shortcut, everyone took the main road: 35 minutes.</p>
+						<p class="demo-caption" id="shortcut-caption" aria-live="polite">The shortcut still saves 17.5 minutes over the main road. A small pilot would report exactly this number, and it would be right for the pilot.</p>
+						<p class="demo-source">Simplified two-road model with made-up travel times (shortcut: 15 min + 40 min × share of drivers on it; main road: 25 min + 10 min × share still on it). It illustrates the idea. It does not describe how Google Maps routes drivers and uses no Google data.</p>
+					</div>
+				</article>
+
+				<div class="case-more" id="case-more">
+				<div class="case-more-inner">
+				<article class="nugget-card" id="case-promo">
+					<div>
+						<p class="research-venue">DS Case Study · Simulated numbers</p>
+						<h3>Orders went up after free delivery. Did the promotion work?</h3>
+						<p class="research-summary">A food-delivery promotion, shown with simulated numbers. Toggle the view.</p>
+						<p class="research-summary">
+							When a promotion launches, orders go up. But some of those orders would have happened anyway, and some are only
+							pulled forward from the following weeks. The way to tell is a holdout group: users who were eligible but deliberately
+							left out. It is the same idea behind the <a href="projects/ad-incrementality.html">ad experiment above</a>: compare
+							against what would have happened anyway, not against last week.
+						</p>
+					</div>
+
+					<div class="demo" data-demo>
+						<div class="demo-toggle" role="group" aria-label="Chart view">
+							<button type="button" data-view="week" aria-pressed="true">Last week vs. promo week</button>
+							<button type="button" data-view="month" aria-pressed="false">Four weeks vs. a holdout</button>
+						</div>
+						<div class="demo-bars" data-view-group="week">
+							<div class="demo-row"><div class="demo-label"><span>Last week, before the promotion</span><strong>12,000 orders</strong></div><div class="demo-track"><div class="demo-fill is-n" data-v="80">12,000</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Promo week, users with free delivery</span><strong>14,000 orders</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="93.3">14,000</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Promo week, holdout users without it</span><strong>12,500 orders</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="83.3">12,500</div></div></div>
+						</div>
+						<div data-view-group="month" hidden>
+							<div class="demo-bars">
+								<div class="demo-row"><div class="demo-label"><span>Four weeks, users with free delivery</span><strong>50,600 orders</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="97.3">50,600</div></div></div>
+								<div class="demo-row"><div class="demo-label"><span>Four weeks, holdout users</span><strong>50,000 orders</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="96.2">50,000</div></div></div>
+							</div>
+							<div class="table-wrap">
+								<table class="result-table">
+									<thead><tr><th>Week</th><th>Promo group</th><th>Holdout</th><th>Extra orders</th></tr></thead>
+									<tbody>
+										<tr><td>1 (promotion)</td><td>14,000</td><td>12,500</td><td><strong>+1,500</strong></td></tr>
+										<tr><td>2</td><td>11,800</td><td>12,500</td><td>−700</td></tr>
+										<tr><td>3</td><td>12,300</td><td>12,500</td><td>−200</td></tr>
+										<tr><td>4</td><td>12,500</td><td>12,500</td><td>0</td></tr>
+										<tr><td><strong>Total</strong></td><td>50,600</td><td>50,000</td><td><strong>+600</strong></td></tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="demo-legend">
+							<span><i></i>Got free delivery (10,000 users)</span>
+							<span><i class="is-b"></i>Holdout, did not (10,000 similar users)</span>
+						</div>
+						<p class="demo-caption" data-view-group="week"><strong>Compared with last week, orders are up 17%.</strong> But the holdout group, who got no promotion, also ordered more than last week (12,500), so the promotion's real effect that week was +12%: 1,500 extra orders, not 2,000.</p>
+						<p class="demo-caption" data-view-group="month" hidden><strong>Over four weeks the promo group placed only 600 more orders (+1.2%).</strong> Many customers moved orders they would have placed anyway into the promotion week, so the following weeks came in below the holdout. Free delivery waived $3 on 14,000 orders, which is $42,000, or about <strong>$70 for each order the promotion actually created</strong>. Whether that is worth it is a business question; "orders went up" does not answer it.</p>
+						<p class="demo-source">Simulated illustration with made-up numbers, not data from any company. In a real test the holdout is chosen at random before the promotion starts.</p>
+					</div>
+				</article>
+
+				<article class="nugget-card" id="case-search">
+					<div>
+						<p class="research-venue">DS Case Study · Simulated numbers</p>
+						<h3>Fewer clicks on a search page can mean a better search page.</h3>
+						<p class="research-summary">A new answer box above the search results, shown with simulated numbers. Toggle the metric.</p>
+						<p class="research-summary">
+							A search page can show a direct answer at the top (a height, a date, a conversion). Fewer people then click through
+							to a website. If clicks were the success metric, that looks like a failure. The better questions are whether people
+							got what they came for, and whether that holds for every kind of search. The toggle shows the same simulated
+							experiment under two metrics.
+						</p>
+					</div>
+
+					<div class="demo" data-demo>
+						<div class="demo-toggle" role="group" aria-label="Metric">
+							<button type="button" data-view="clicks" aria-pressed="true">Clicks</button>
+							<button type="button" data-view="needed" aria-pressed="false">Got what they needed</button>
+						</div>
+						<div class="demo-bars" data-view-group="clicks">
+							<div class="demo-row"><div class="demo-label"><span>Quick facts (60% of searches), before</span><strong>74%</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="74">74%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Quick facts, with the answer box</span><strong>22%</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="22">22%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Research questions (40%), before</span><strong>82%</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="82">82%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Research questions, with the answer box</span><strong>71%</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="71">71%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>All searches, before</span><strong>77%</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="77.2">77%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>All searches, with the answer box</span><strong>42%</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="41.6">42%</div></div></div>
+						</div>
+						<div class="demo-bars" data-view-group="needed" hidden>
+							<div class="demo-row"><div class="demo-label"><span>Quick facts (60% of searches), before</span><strong>71%</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="71">71%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Quick facts, with the answer box</span><strong>91%</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="91">91%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Research questions (40%), before</span><strong>69%</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="69">69%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>Research questions, with the answer box</span><strong>63%</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="63">63%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>All searches, before</span><strong>70%</strong></div><div class="demo-track"><div class="demo-fill is-a" data-v="70.2">70%</div></div></div>
+							<div class="demo-row"><div class="demo-label"><span>All searches, with the answer box</span><strong>80%</strong></div><div class="demo-track"><div class="demo-fill is-b" data-v="79.8">80%</div></div></div>
+						</div>
+						<div class="demo-legend">
+							<span><i></i>Before the answer box</span>
+							<span><i class="is-b"></i>With the answer box</span>
+						</div>
+						<p class="demo-caption" data-view-group="clicks"><strong>Clicks fall from 77% to 42% of searches, down 46%.</strong> If clicks were the goal, the answer box looks like a disaster. For quick facts the drop is dramatic (74% to 22%): people read the answer and leave.</p>
+						<p class="demo-caption" data-view-group="needed" hidden><strong>Searches where people got what they needed rise from 70% to 80%.</strong> But look inside: for quick facts it jumps from 71% to 91%, while for research questions it falls from 69% to 63%, because a short answer is not enough and some people stop too early. The average hides a feature that helps one kind of search and hurts another, so the decision needs both the right metric and a breakdown.</p>
+						<p class="demo-source">Simulated illustration with made-up numbers, not data from Google or any company. In practice, "got what they needed" is measured with signals such as no quick re-search, time on a result, or a survey, and each of those is imperfect.</p>
+					</div>
+				</article>
+				</div>
+				</div>
+
+				<button class="case-toggle is-pulsing" type="button" aria-expanded="false" aria-controls="case-more">
+					<span class="case-dot" aria-hidden="true"></span>
+					<span class="case-toggle-text">
+						<strong class="case-toggle-label">See 2 more case studies</strong>
+						<small class="case-toggle-peek">Free delivery holdout · Search answer box</small>
+					</span>
+					<span class="case-chevron" aria-hidden="true"></span>
+				</button>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="experience" aria-labelledby="experience-title">
+			<div class="page-shell">
+				<header class="section-heading">
+					<h2 id="experience-title">Experience</h2>
+					<p>Work</p>
+				</header>
+
+				<div class="experience-layout">
+					<div class="timeline">
+						<article class="timeline-item">
+							<div class="timeline-copy">
+								<p class="timeline-time">2021 - 2024</p>
+								<h3>Associate <span class="nowrap">at Cognizant Technology Solutions</span></h3>
+								<p>SQL data pipelines for brokerage and insurance claims data · Informatica PowerCenter, AQT, Autosys</p>
+							</div>
+						</article>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="education" aria-labelledby="education-title">
+			<div class="page-shell">
+				<header class="section-heading">
+					<h2 id="education-title">Education</h2>
+					<p>Degrees</p>
+				</header>
+
+				<div class="timeline">
+					<article class="timeline-item">
+						<div class="timeline-copy">
+							<p class="timeline-time">2025 - 2027</p>
+							<h3>M.S. in Analytics <span class="nowrap">at Georgia Institute of Technology</span></h3>
+							<p>Computational Data Analytics Track · GPA 3.83/4.00 · Expected Aug 2027</p>
+						</div>
+					</article>
+					<article class="timeline-item">
+						<div class="timeline-copy">
+							<p class="timeline-time">2017 - 2021</p>
+							<h3>B.Tech in Computer Science &amp; Engineering <span class="nowrap">at University of Engineering &amp; Management</span></h3>
+							<p>Kolkata, India · CGPA 8.58/10.00</p>
+						</div>
+					</article>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer">
+		<div class="page-shell footer-layout">
+			<div>
+				<a class="footer-email" href="mailto:iamsb98@gmail.com">iamsb98 [at] gmail.com</a>
+			</div>
+			<div class="footer-links">
+				<a href="https://www.linkedin.com/in/sbhattacharya98/" target="_blank" rel="noopener">LinkedIn</a>
+				<a href="SB_DE_mt.pdf" target="_blank" rel="noopener">Résumé</a>
+			</div>
+		</div>
+		<div class="page-shell footer-meta">
+			<span>&copy; Shrestha Bhattacharya 2026</span>
+		</div>
+	</footer>
+</body>
+</html>

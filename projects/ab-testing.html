@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>A/B Tests With 32% Fewer Users · Shrestha Bhattacharya</title>
+	<meta name="description" content="Variance reduction and sequential testing on a real 200,000-customer experiment, verified against simulations where the true effect is known." />
+	<link rel="icon" href="../assets/img/shrestha.jpg" />
+	<link rel="stylesheet" href="../assets/css/site.css" />
+	<script>document.documentElement.classList.add("js");</script>
+	<script src="../assets/js/chart-data.js" defer></script>
+	<script src="../assets/js/charts.js" defer></script>
+	<script src="../assets/js/main.js" defer></script>
+</head>
+<body class="post-page">
+	<a class="skip-link" href="#main">Skip to content</a>
+
+	<header class="site-header">
+		<div class="page-shell nav-layout">
+			<a class="nav-home" href="../index.html"><img src="../assets/img/shrestha.jpg" width="32" height="32" alt="" />Shrestha Bhattacharya</a>
+			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+			<nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+				<a href="../index.html#projects">Projects</a>
+				<a href="../index.html#case-studies">Case Studies</a>
+				<a href="../index.html#experience">Experience</a>
+				<a href="../index.html#education">Education</a>
+			</nav>
+		</div>
+	</header>
+
+	<main id="main">
+		<article class="post">
+			<div class="post-col">
+				<a class="post-back" href="../index.html#projects">← Projects</a>
+				<p class="post-kicker">Project · Experimentation</p>
+				<h1>A/B Tests With 32% Fewer Users: Variance Reduction &amp; Safe Early Stopping</h1>
+				<p class="post-lede">
+					How many users does a test really need, and what happens when you check it early? Variance reduction and
+					sequential testing on a real 200,000-customer experiment, verified against simulations where the true effect is known.
+				</p>
+
+				<div class="stat-grid">
+					<div class="stat-tile"><div class="stat-num">13–22%</div><div class="stat-label">fewer users needed for the same precision, using each customer's purchase history from before the test</div></div>
+					<div class="stat-tile"><div class="stat-num">38%</div><div class="stat-label">of tests with no real effect declared a win when checked 100 times and stopped at the first p &lt; 0.05 (target: 5%)</div></div>
+					<div class="stat-tile"><div class="stat-num">−32%</div><div class="stat-label">users per arm on average, with 7 points more power, from combining both ideas (86% power at ~25,000 users vs. 79% at 37,000)</div></div>
+					<div class="stat-tile"><div class="stat-num">1.33pp</div><div class="stat-label">average lift reported by tests that stopped early with a win, when the true lift is 1.0pp (1.7pp under naive peeking)</div></div>
+				</div>
+
+				<div class="prose">
+					<p>
+						Every experimentation team feels two pressures: tests take too long and use too many users, and people want to look
+						at results while the test is still running. There are standard tools for both, variance reduction (CUPED and its
+						relatives) and sequential testing. I wanted to know how much they actually deliver on real data, and whether they
+						stay valid. The data is a real randomized SMS campaign from the retailer X5, from the public
+						<a href="https://ods.ai/competitions/x5-retailhero-uplift-modeling/data" target="_blank" rel="noopener">RetailHero competition</a>:
+						about 200,000 customers split 50/50, a purchase rate of 60.3% in control and 63.7% in treatment (+3.3pp), and
+						4 million transactions of purchase history from before the campaign.
+					</p>
+				</div>
+
+				<section class="part" id="part-1">
+					<p class="part-label">Part 1 · The data</p>
+					<h2>Can the experiment be trusted?</h2>
+					<p>
+						Before any analysis I checked the randomization. The split is 100,058 vs. 99,981 customers (p = 0.86 against 50/50),
+						and a direct test of each of the 19 pre-campaign features flags none of them. Those features come from 45.8 million
+						purchase lines, collapsed to 4.0 million transactions: counts and spend over several windows, recency, tenure,
+						redemption history, age and gender.
+					</p>
+					<p>
+						Two details would have broken the analysis silently. In the raw file, <span class="mono">purchase_sum</span> is the
+						transaction total repeated on every line item, so summing it over lines inflates spend several-fold (I verified this
+						on all 8.0 million transactions). And a clients table captured after the campaign contained a redemption date running
+						to November 2019, which made one feature post-treatment. An audit after my first full draft caught it: that feature
+						was the only one failing a balance test (p = 2e-7). I replaced it with "redeemed before the campaign" and reran
+						everything. The numbers moved by less than half a point.
+					</p>
+				</section>
+
+				<section class="part" id="part-2">
+					<p class="part-label">Part 2 · Variance reduction</p>
+					<h2>What past behavior is worth</h2>
+					<p>
+						If a customer's past behavior predicts whether they buy afterward, you can subtract the predictable part and compare
+						what is left. That is the idea behind CUPED
+						(<a href="https://exp-platform.com/cuped/" target="_blank" rel="noopener">Deng, Xu, Kohavi &amp; Walker, 2013</a>),
+						and it stays valid in a randomized test because the features are measured before assignment. I compared five
+						estimators on the full data.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="variance"></div>
+						<figcaption>Fig. 6 — fewer users needed for the same precision, with 95% bootstrap intervals. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Method</th><th>Fewer users</th><th>95% interval</th></tr></thead>
+							<tbody>
+								<tr><td>CUPED, one covariate (past transactions)</td><td><strong>12.7%</strong></td><td>12.5 to 13.0</td></tr>
+								<tr><td>Regression adjustment, 19 covariates</td><td><strong>17.8%</strong></td><td>17.5 to 18.0</td></tr>
+								<tr><td>Post-stratification on a predicted score</td><td><strong>21.7%</strong></td><td>21.4 to 22.0</td></tr>
+								<tr><td>CUPAC (CUPED with a machine-learned score)</td><td><strong>22.0%</strong></td><td>21.7 to 22.3</td></tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>To detect a lift of</th><th>Plain test</th><th>With CUPAC</th></tr></thead>
+							<tbody>
+								<tr><td>3.3pp (the observed effect)</td><td>3,352 per arm</td><td><strong>2,616</strong></td></tr>
+								<tr><td>1pp</td><td>36,945</td><td><strong>28,833</strong></td></tr>
+								<tr><td>0.5pp</td><td>147,779</td><td><strong>115,330</strong></td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p>
+						A more precise estimator is worthless if it is biased or its intervals are too narrow, and real data cannot reveal
+						the true effect. So I built experiments where it is exact: take control customers only, assign random fake arms, and
+						inject a known effect. With no injection this is a true A/A test. Across 500, 2,000 and 5,000 users per arm, all five
+						methods were unbiased (under 0.08pp), their 95% intervals covered the truth 93.6% to 95.6% of the time, and A/A false
+						positives stayed between 4.7% and 5.6%.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="power"></div>
+						<figcaption>Fig. 7 — same effect, same users: at 2,000 per arm, power rises from 58.8% (plain) to 68.8% (CUPAC). <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+				</section>
+
+				<section class="part" id="part-3">
+					<p class="part-label">Part 3 · Peeking</p>
+					<h2>What checking early does to a test</h2>
+					<p>
+						I simulated tests with no real effect and a planned 5,000 users per arm, checking the data at evenly spaced points
+						and declaring a win at the first p &lt; 0.05.
+					</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="peeking"></div>
+						<figcaption>Fig. 8 — false alarms climb with every extra look unless the error budget is spent across the looks. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Number of looks</th><th>1</th><th>2</th><th>5</th><th>10</th><th>20</th><th>50</th><th>100</th></tr></thead>
+							<tbody>
+								<tr><td>Naive peeking</td><td>5.2%</td><td>9.0%</td><td>14.9%</td><td>19.8%</td><td><strong>24.7%</strong></td><td>32.6%</td><td><strong>38.0%</strong></td></tr>
+								<tr><td>O'Brien-Fleming</td><td>5.2%</td><td>5.3%</td><td>5.3%</td><td>5.2%</td><td><strong>5.2%</strong></td><td>5.2%</td><td><strong>5.3%</strong></td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p>
+						The fix is not "never look". It is to spend the 5% error budget across the looks. I implemented Lan-DeMets
+						alpha-spending boundaries by numerical integration and validated them by simulation: 4.9% false positives with
+						O'Brien-Fleming boundaries and 5.1% with Pocock-type, against 25.1% for repeated 1.96 thresholds. Then I compared the
+						rules on a test with a true 1pp lift, a planned 37,000 users per arm and 20 looks.
+					</p>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Rule</th><th>Power</th><th>Average users per arm</th></tr></thead>
+							<tbody>
+								<tr><td>Fixed horizon (one look at the end)</td><td>79.5%</td><td>37,000</td></tr>
+								<tr><td>O'Brien-Fleming</td><td><strong>76.3%</strong></td><td><strong>27,325 (−26%)</strong></td></tr>
+								<tr><td>Pocock-type</td><td>68.8%</td><td>25,366</td></tr>
+								<tr><td>mSPRT (always valid)</td><td>47.2%</td><td>29,779</td></tr>
+								<tr><td>Naive peeking</td><td>88.7%</td><td>16,224, with 25% false positives</td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p class="aside">
+						O'Brien-Fleming gives up about 3 points of power but stops 26% earlier on average, because clear wins are declared
+						early. mSPRT (<a href="https://arxiv.org/pdf/1512.04922v2" target="_blank" rel="noopener">Johari et al.</a>) needs no
+						planned horizon and is valid under continuous monitoring, but when the horizon is known it pays a large power price,
+						and it is sensitive to its prior.
+					</p>
+				</section>
+
+				<section class="part" id="part-4">
+					<p class="part-label">Part 4 · Both together</p>
+					<h2>Fewer users and more power, plus a caution</h2>
+					<p>Each CUPAC point in the chart sits above and to the left of its plain counterpart: more power and fewer users.</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="decision"></div>
+						<figcaption>Fig. 9 — for a true 1pp lift, CUPAC plus O'Brien-Fleming moves a test from 79.5% power at 37,000 users to 86.2% at about 25,000. <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Setup</th><th>Power</th><th>Average users per arm</th></tr></thead>
+							<tbody>
+								<tr><td>Plain, fixed horizon</td><td>79.5%</td><td>37,000</td></tr>
+								<tr><td>CUPAC, fixed horizon</td><td>88.8%</td><td>37,000</td></tr>
+								<tr><td>CUPAC + O'Brien-Fleming</td><td><strong>86.2%</strong></td><td><strong>24,966 (−32.5%)</strong></td></tr>
+							</tbody>
+						</table>
+					</div>
+					<p>
+						The result held across 10 independent seeds (new score model, new folds, new simulated experiments each time): 86.2%
+						power (seed-to-seed SD 1.8 points) with 25,064 users per arm on average. It also does not depend on a complex model:
+						a shallow tree model or a plain logistic regression gave 21.5% and 21.1% fewer users, against 22.0% for gradient
+						boosting. The value comes from using purchase history at all.
+					</p>
+					<p id="winners-curse">One caution. Among tests that stopped and declared a win, the average estimated lift was well above the true 1.0pp.</p>
+					<figure class="figure is-wide">
+						<div class="chart" data-chart="winners"></div>
+						<figcaption>Fig. 10 — stopping early overstates the winning effect: 1.13pp (fixed horizon), 1.33 (O'Brien-Fleming), 1.58 (Pocock-type), 1.67 (naive peeking), 1.70 (mSPRT). <button class="replay" type="button">Replay</button></figcaption>
+					</figure>
+					<p class="aside">
+						Selecting on "statistically significant" inflates the estimate even in a fixed-horizon test, and stopping early on a
+						lucky streak inflates it further. A team that stops early should report a bias-adjusted estimate or a confidence
+						sequence, not the raw number at the stopping point.
+					</p>
+				</section>
+
+				<section class="part" id="scope">
+					<p class="part-label">Scope &amp; Assumptions</p>
+					<ul class="limitations">
+						<li><strong>One experiment, one population.</strong> The 13–22% saving reflects how well past purchases predict future purchases for this retailer. Where history is less predictive, the saving will be smaller.</li>
+						<li><strong>Simulated arrival and effects.</strong> The data do not record the order customers entered the experiment, so sequential tests use random arrival order. Injected effects are the same for everyone, while real effects vary.</li>
+						<li><strong>Approximations.</strong> The CUPED coefficient is re-estimated from the data seen so far at each look (false positives held at 5.0% in the simulations, but this is not a proof). mSPRT uses plug-in variances and only 20 looks, so truly continuous monitoring would raise its error rate, still bounded by 5% in theory.</li>
+						<li><strong>Simulation error.</strong> Power figures in the 1pp scenario carry about ±1 point of Monte Carlo error; seed-to-seed variation is reported above.</li>
+						<li><strong>Assumed campaign date.</strong> The campaign date is not given, so I used the day after the last recorded transaction (2019-03-19). Features that depend on it (recency, redemption before the campaign) would shift slightly under a different date.</li>
+						<li><strong>Data terms.</strong> Public RetailHero competition data, obtained from a public mirror. Its license is unconfirmed, so it is analyzed and cited here, not redistributed.</li>
+					</ul>
+				</section>
+
+				<nav class="post-nav" aria-label="More projects">
+					<a href="ad-incrementality.html"><small>Previous project</small><span>Advertising Incrementality &amp; Uplift Modeling</span></a>
+					<a class="is-next" href="switchback.html"><small>Next project</small><span>Switchback Experiments on 19.7M NYC Trips</span></a>
+				</nav>
+			</div>
+		</article>
+	</main>
+
+	<footer class="site-footer">
+		<div class="page-shell footer-layout">
+			<div>
+				<a class="footer-email" href="mailto:iamsb98@gmail.com">iamsb98 [at] gmail.com</a>
+			</div>
+			<div class="footer-links">
+				<a href="https://www.linkedin.com/in/sbhattacharya98/" target="_blank" rel="noopener">LinkedIn</a>
+				<a href="../SB_DE_mt.pdf" target="_blank" rel="noopener">Résumé</a>
+			</div>
+		</div>
+		<div class="page-shell footer-meta">
+			<span>&copy; Shrestha Bhattacharya 2026</span>
+		</div>
+	</footer>
+</body>
+</html>
