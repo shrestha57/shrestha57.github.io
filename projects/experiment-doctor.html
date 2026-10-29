@@ -40,6 +40,10 @@
 					returns a plain-English verdict instead of a wall of p-values.
 				</p>
 
+				<div class="project-links" aria-label="Links for Experiment Doctor">
+					<a href="https://github.com/shrestha57/experiment-doctor" target="_blank" rel="noopener">Code on GitHub</a>
+				</div>
+
 				<div class="stat-grid">
 					<div class="stat-tile"><div class="stat-num">5</div><div class="stat-label">failure modes checked automatically: SRM, peeking, interference, Simpson's paradox, CUPED opportunity</div></div>
 					<div class="stat-tile"><div class="stat-num">p = 7.43e-07</div><div class="stat-label">significance at which the tool flagged a 3.5% sample-ratio skew in the demo's broken experiment</div></div>
@@ -110,7 +114,7 @@
 						<li><strong>Synthetic demo data only.</strong> Both demo experiments are generated with numpy — no real company or user data. The peeking false positive is a genuine draw from a true-null simulation (seed search over 500 draws), not a hand-picked number.</li>
 						<li><strong>Standard thresholds, not novel statistics.</strong> The SRM and CUPED checks use published reference methods (Fabijan et al. 2019; Deng et al. 2013); the interference check is a heuristic rule of thumb, not a formal test, and says so in its own output.</li>
 						<li><strong>Built for triage, not a replacement for judgment.</strong> A "pass" on all five checks means none of these five specific failure modes is detected — it isn't a guarantee the result is causally correct.</li>
-						<li><strong>Packaged, not yet publicly hosted.</strong> The code and methodology are documented and ready to run (<span class="mono">streamlit run app.py</span>); a public one-click demo is next.</li>
+						<li><strong>Source is public, hosted demo is next.</strong> Full code and methodology are on <a href="https://github.com/shrestha57/experiment-doctor" target="_blank" rel="noopener">GitHub</a>, runnable locally with <span class="mono">streamlit run app.py</span>; a one-click public demo (Streamlit Community Cloud) is the next step.</li>
 					</ul>
 				</section>
 
