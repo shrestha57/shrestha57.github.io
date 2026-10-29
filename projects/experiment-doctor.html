@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Experiment Doctor: Automated A/B Test Diagnostics · Shrestha Bhattacharya</title>
+	<meta name="description" content="An open-source Python + Streamlit tool that runs five checks on an A/B test — sample ratio mismatch, peeking, interference, Simpson's paradox, CUPED opportunity — and returns a plain-English verdict." />
+	<link rel="icon" href="../assets/img/shrestha.jpg" />
+	<link rel="stylesheet" href="../assets/css/site.css" />
+	<script>document.documentElement.classList.add("js");</script>
+	<script src="../assets/js/chart-data.js" defer></script>
+	<script src="../assets/js/charts.js" defer></script>
+	<script src="../assets/js/main.js" defer></script>
+</head>
+<body class="post-page">
+	<a class="skip-link" href="#main">Skip to content</a>
+
+	<header class="site-header">
+		<div class="page-shell nav-layout">
+			<a class="nav-home" href="../index.html"><img src="../assets/img/shrestha.jpg" width="32" height="32" alt="" />Shrestha Bhattacharya</a>
+			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+			<nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+				<a href="../index.html#projects">Projects</a>
+				<a href="../index.html#case-studies">Case Studies</a>
+				<a href="../index.html#experience">Experience</a>
+				<a href="../index.html#education">Education</a>
+			</nav>
+		</div>
+	</header>
+
+	<main id="main">
+		<article class="post">
+			<div class="post-col">
+				<a class="post-back" href="../index.html#projects">← Projects</a>
+				<p class="post-kicker">Project · Open-source tooling</p>
+				<h1>Experiment Doctor: Automated A/B Test Diagnostics</h1>
+				<p class="post-lede">
+					Most A/B tests aren't invalid because the math is wrong — they're invalid because of what happened
+					<em>around</em> the math. A tool that runs an experiment through five checks for exactly that, and
+					returns a plain-English verdict instead of a wall of p-values.
+				</p>
+
+				<div class="stat-grid">
+					<div class="stat-tile"><div class="stat-num">5</div><div class="stat-label">failure modes checked automatically: SRM, peeking, interference, Simpson's paradox, CUPED opportunity</div></div>
+					<div class="stat-tile"><div class="stat-num">p = 7.43e-07</div><div class="stat-label">significance at which the tool flagged a 3.5% sample-ratio skew in the demo's broken experiment</div></div>
+					<div class="stat-tile"><div class="stat-num">5 → 0</div><div class="stat-label">checks failed on the broken demo vs. 0 failed on the same pipeline run on a clean experiment</div></div>
+					<div class="stat-tile"><div class="stat-num">~35%</div><div class="stat-label">fewer users CUPED could need on a pre-period covariate the naive analysis left unused</div></div>
+				</div>
+
+				<div class="prose">
+					<p>
+						The three projects above each surfaced a different way an A/B test can quietly lie: marketplace
+						interference inflating a promotion's effect, variance and peeking costing power or inflating false
+						positives, a biased randomization check. Each time, the fix was a specific statistical check run by
+						hand. Experiment Doctor packages those checks — plus two more (sample ratio mismatch and Simpson's
+						paradox) — into one reusable tool, so the audit doesn't have to be rebuilt from scratch for every new
+						experiment.
+					</p>
+				</div>
+
+				<section class="part" id="part-1">
+					<p class="part-label">Part 1 · The five checks</p>
+					<h2>What it looks for, and how</h2>
+					<p>
+						Each check returns a pass, warn, or fail with a plain-English headline and the statistic behind it —
+						never just a verdict with no way to verify it.
+					</p>
+					<div class="table-wrap">
+						<table class="result-table">
+							<thead><tr><th>Check</th><th>What it catches</th><th>Method</th></tr></thead>
+							<tbody>
+								<tr><td>Sample Ratio Mismatch</td><td>Randomization/logging bugs that skew the arm split</td><td>Chi-square goodness-of-fit at α = 0.001 (Fabijan et al. 2019)</td></tr>
+								<tr><td>Peeking / sequential monitoring</td><td>False positives from checking results early</td><td>O'Brien-Fleming boundaries, Monte Carlo-calibrated</td></tr>
+								<tr><td>Interference / spillover</td><td>Marketplace effects biasing user-level randomization</td><td>Randomization-unit + served-share heuristic, informed by the switchback project above</td></tr>
+								<tr><td>Simpson's paradox</td><td>Aggregate effects that are really a mix-shift</td><td>Segment-mix balance test + pooled-weight standardization</td></tr>
+								<tr><td>CUPED opportunity</td><td>Power left on the table by skipping a pre-period covariate</td><td>Variance-reduction estimate from corr(Y, X) (Deng et al. 2013)</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section class="part" id="part-2">
+					<p class="part-label">Part 2 · Proving it isn't just crying wolf</p>
+					<h2>Same pipeline, two experiments</h2>
+					<p>
+						A tool that always says "fail" is useless. To check that it only flags real problems, I ran it on
+						two synthetic experiments built with the same code: one with four problems injected on purpose
+						(a 3.5% sample-ratio skew, a peeking-driven false positive found by simulating 500 true-null draws
+						until one crossed the naive significance threshold early, a tight-supply shared-resource market
+						randomized at the user level, and a segment mix shift that flips the sign of the raw effect), and
+						one run clean.
+					</p>
+					<figure class="figure is-wide">
+						<div class="shot"><img src="../assets/img/expdoctor-broken.png" alt="Experiment Doctor report on the broken demo: all five checks fail, including SRM at p = 7.43e-07 and a Simpson's-paradox sign flip" loading="lazy" width="760" height="844" /></div>
+						<figcaption>The broken demo: all five checks fail, each with the statistic behind the call — chi-square = 24.50 for the SRM, a Simpson's-paradox sign flip from +5.00 raw to −0.42 standardized.</figcaption>
+					</figure>
+					<figure class="figure is-wide">
+						<div class="shot"><img src="../assets/img/expdoctor-clean.png" alt="Experiment Doctor report on the clean demo: all five checks pass" loading="lazy" width="760" height="844" /></div>
+						<figcaption>The same code, run on a well-randomized experiment: all five checks pass, including the SRM check on a split that's actually close to 50/50 (chi-square = 0.08, p = 0.777).</figcaption>
+					</figure>
+					<p class="aside">
+						The broken demo's interference check reuses the 3.3x overstatement figure from the switchback
+						project above — not a new number, the same validated result applied as a structural rule of thumb.
+					</p>
+				</section>
+
+				<section class="part" id="scope">
+					<p class="part-label">Scope &amp; Assumptions</p>
+					<ul class="limitations">
+						<li><strong>Synthetic demo data only.</strong> Both demo experiments are generated with numpy — no real company or user data. The peeking false positive is a genuine draw from a true-null simulation (seed search over 500 draws), not a hand-picked number.</li>
+						<li><strong>Standard thresholds, not novel statistics.</strong> The SRM and CUPED checks use published reference methods (Fabijan et al. 2019; Deng et al. 2013); the interference check is a heuristic rule of thumb, not a formal test, and says so in its own output.</li>
+						<li><strong>Built for triage, not a replacement for judgment.</strong> A "pass" on all five checks means none of these five specific failure modes is detected — it isn't a guarantee the result is causally correct.</li>
+						<li><strong>Packaged, not yet publicly hosted.</strong> The code and methodology are documented and ready to run (<span class="mono">streamlit run app.py</span>); a public one-click demo is next.</li>
+					</ul>
+				</section>
+
+				<nav class="post-nav" aria-label="More projects">
+					<a href="switchback.html"><small>Previous project</small><span>Switchback Experiments on 19.7M NYC Trips</span></a>
+					<a class="is-next" href="../index.html#case-studies"><small>Next</small><span>DS Case Studies</span></a>
+				</nav>
+			</div>
+		</article>
+	</main>
+
+	<footer class="site-footer">
+		<div class="page-shell footer-layout">
+			<div>
+				<a class="footer-email" href="mailto:iamsb98@gmail.com">iamsb98 [at] gmail.com</a>
+			</div>
+			<div class="footer-links">
+				<a href="https://www.linkedin.com/in/sbhattacharya98/" target="_blank" rel="noopener">LinkedIn</a>
+				<a href="../SB_DE_mt.pdf" target="_blank" rel="noopener">Résumé</a>
+			</div>
+		</div>
+		<div class="page-shell footer-meta">
+			<span>&copy; Shrestha Bhattacharya 2026</span>
+		</div>
+	</footer>
+</body>
+</html>

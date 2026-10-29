@@ -144,6 +144,30 @@
 						</a>
 					</div>
 				</div>
+
+				<div class="work-feature">
+					<div class="work-story">
+						<p class="entry-date">Open-source tooling · Python + Streamlit · Diagnostic checks for A/B tests</p>
+						<h3><a href="projects/experiment-doctor.html">Experiment Doctor: Automated A/B Test Diagnostics</a></h3>
+						<p>
+							Most A/B tests aren't invalid because the math is wrong — they're invalid because of what happened
+							around the math: a logging bug that skewed the split, a few extra looks at the dashboard, a shared
+							resource, a segment mix that shifted. Built a tool that runs five checks for exactly those problems —
+							sample ratio mismatch, peeking, interference, Simpson's paradox, missed CUPED opportunity — and
+							returns a plain-English verdict instead of a wall of p-values.
+						</p>
+					</div>
+					<div class="product-list" aria-label="Experiment Doctor, demo results">
+						<a href="projects/experiment-doctor.html#part-2">
+							<div class="product-image"><img src="assets/img/expdoctor-broken.png" alt="Experiment Doctor dashboard showing all five checks failed on a broken demo experiment" loading="lazy" width="760" height="844" /></div>
+							<span class="product-caption"><span><strong>Broken demo</strong><small>5 problems injected, all 5 caught</small></span><span aria-hidden="true">→</span></span>
+						</a>
+						<a href="projects/experiment-doctor.html#part-2">
+							<div class="product-image"><img src="assets/img/expdoctor-clean.png" alt="Experiment Doctor dashboard showing all five checks passed on a clean demo experiment" loading="lazy" width="760" height="844" /></div>
+							<span class="product-caption"><span><strong>Clean demo</strong><small>Proof it doesn't just cry wolf</small></span><span aria-hidden="true">→</span></span>
+						</a>
+					</div>
+				</div>
 			</div>
 		</section>
 
